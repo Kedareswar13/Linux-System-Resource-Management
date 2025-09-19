@@ -21,19 +21,18 @@ A desktop GUI application for Linux that continuously logs and visualizes system
 
 ```
 Linux System Resource Management/
-└── cummulation/
-    ├── background.jpeg                 # App background image (displayed in main window)
-    ├── code/
-    │   ├── main.py                     # App entry point and main window
-    │   ├── cpu_procs_backend.py        # Logs CPU core and vmstat metrics to CSV
-    │   ├── cpu_procs_gui.py            # CPU dashboard: tables + average CPU plot
-    │   ├── memory_backend.py           # Logs memory and swap metrics to CSV
-    │   ├── memory_gui.py               # Memory dashboard + multiple plots
-    │   ├── gpu_backend.py              # Logs GPU metrics (NVIDIA/AMD/Intel) to CSV
-    │   ├── gpu_gui.py                  # GPU dashboard + utilization plot
-    │   ├── i_o_backend.py              # Logs iotop + pidstat output to CSV
-    │   └── i_o_gui.py                  # Disk I/O dashboard + trends/spikes plots
-    └── csvs/                           # CSV outputs (created at runtime)
+├── background.jpeg                 # App background image (displayed in main window)
+├── code/
+│   ├── main.py                     # App entry point and main window
+│   ├── cpu_procs_backend.py        # Logs CPU core and vmstat metrics to CSV
+│   ├── cpu_procs_gui.py            # CPU dashboard: tables + average CPU plot
+│   ├── memory_backend.py           # Logs memory and swap metrics to CSV
+│   ├── memory_gui.py               # Memory dashboard + multiple plots
+│   ├── gpu_backend.py              # Logs GPU metrics (NVIDIA/AMD/Intel) to CSV
+│   ├── gpu_gui.py                  # GPU dashboard + utilization plot
+│   ├── i_o_backend.py              # Logs iotop + pidstat output to CSV
+│   └── i_o_gui.py                  # Disk I/O dashboard + trends/spikes plots
+└── csvs/                           # CSV outputs (created at runtime)
 ```
 
 Backends write to CSV files every second. GUI modules read those CSVs and render live-updating tables and plots.
@@ -125,19 +124,19 @@ pip install pillow matplotlib
 
 ## Configuration (important)
 
-The repository currently uses absolute paths pointing to a developer machine (e.g., `/home/sasi-1902/Documents/Programming/Os_prj/cummulation/...`). Before running, you should update these to use project-relative paths or environment variables.
+The repository may contain absolute paths from a developer machine in older commits. Ensure all paths use project-relative locations or environment variables.
 
-- Change background image path in `cummulation/code/main.py`:
-  - `background_image = Image.open("cummulation/background.jpeg")`
-- Change CSV paths in:
-  - `cummulation/code/cpu_procs_backend.py` (CPU_LOG_FILE, VMSTAT_LOG_FILE)
-  - `cummulation/code/cpu_procs_gui.py` (CPU_CORE_CSV, PROCESS_CSV)
-  - `cummulation/code/memory_backend.py` (MEMORY_LOG_FILE)
-  - `cummulation/code/memory_gui.py` (MEMORY_CSV)
-  - `cummulation/code/gpu_backend.py` (output_file)
-  - `cummulation/code/gpu_gui.py` (GPU_CSV_FILE)
-  - `cummulation/code/i_o_backend.py` (output_file)
-  - `cummulation/code/i_o_gui.py` (DISK_IO_CSV)
+- Background image path in `code/main.py` should be relative to the repo root:
+  - `background_image = Image.open("background.jpeg")`
+- CSV paths in the following files should point to the `csvs/` directory using relative paths:
+  - `code/cpu_procs_backend.py` (CPU_LOG_FILE, VMSTAT_LOG_FILE)
+  - `code/cpu_procs_gui.py` (CPU_CORE_CSV, PROCESS_CSV)
+  - `code/memory_backend.py` (MEMORY_LOG_FILE)
+  - `code/memory_gui.py` (MEMORY_CSV)
+  - `code/gpu_backend.py` (output_file)
+  - `code/gpu_gui.py` (GPU_CSV_FILE)
+  - `code/i_o_backend.py` (output_file)
+  - `code/i_o_gui.py` (DISK_IO_CSV)
 
 Recommended convention (relative to repo root):
 ```
@@ -147,7 +146,7 @@ and then build filenames with `os.path.join(CSV_DIR, "cpu_metrics.csv")` etc.
 
 ### About sudo and credentials
 
-`cummulation/code/i_o_backend.py` currently pipes a hardcoded sudo password to run `iotop` and `pidstat`:
+`code/i_o_backend.py` currently pipes a hardcoded sudo password to run `iotop` and `pidstat`:
 - This is insecure. Do not commit passwords to code.
 - Safer alternatives:
   - Configure `/etc/sudoers` to allow your user to run specific commands without a password, e.g.:
@@ -167,7 +166,7 @@ Update `sudo_password` handling accordingly or prompt for it at runtime (not sto
 2. Start the application from the repo root:
 
 ```bash
-python3 cummulation/code/main.py
+python3 code/main.py
 ```
 
 3. The main window appears with buttons:
@@ -176,13 +175,13 @@ python3 cummulation/code/main.py
    - GPU
    - Input Output Status
 
-4. Clicking a button opens the respective dashboard. Log threads start automatically when the app launches. Closing the main window stops logging and attempts to remove the CSVs under `cummulation/csvs/`.
+4. Clicking a button opens the respective dashboard. Log threads start automatically when the app launches. Closing the main window stops logging and attempts to remove the CSVs under `csvs/`.
 
 
 ## Troubleshooting
 
 - Blank tables/plots:
-  - Ensure CSV files are being written under `cummulation/csvs/`.
+  - Ensure CSV files are being written under `csvs/`.
   - Check console logs for missing tools (e.g., `mpstat`, `vmstat`, `nvidia-smi`).
 - GPU shows "No GPU Detected":
   - Verify vendor tool installation and permissions.
@@ -192,7 +191,7 @@ python3 cummulation/code/main.py
 - Tkinter not found:
   - Install `python3-tk` (Debian/Ubuntu) or the equivalent for your distro.
 - Background image not found:
-  - Ensure `cummulation/background.jpeg` exists and the path in `main.py` is relative.
+  - Ensure `background.jpeg` exists at the repo root and the path in `main.py` is relative.
 
 
 ## Roadmap / Ideas
